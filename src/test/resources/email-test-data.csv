@@ -1,0 +1,7 @@
+email,expected
+user@example.com,true
+invalid-email,false
+test@domain.org,true
+@missing.com,false
+name@company.co.uk,true
+missing-at-sign,false
