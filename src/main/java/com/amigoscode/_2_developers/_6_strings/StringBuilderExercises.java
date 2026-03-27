@@ -20,7 +20,9 @@ public class StringBuilderExercises {
         // TODO: 1 - Create a new StringBuilder.
         //  Append "Hello, ", then name, then "! You are ", then age, then " years old."
         //  Convert to String and return.
-        return null;
+        StringBuilder sb = new StringBuilder();
+        sb.append("Hello, ").append("Java").append("! You are ").append("90 ").append("years old.");
+        return sb.toString();
     }
 
     /**
@@ -36,7 +38,11 @@ public class StringBuilderExercises {
         //  Find the index of the first space using indexOf(" ").
         //  Insert middleName + " " at position (spaceIndex + 1).
         //  Convert to String and return.
-        return null;
+        StringBuilder sb = new StringBuilder(fullName);
+        int space = sb.indexOf(" ");
+
+        sb.insert(space + 1, middleName + " ");
+        return sb.toString();
     }
 
     /**
@@ -51,7 +57,14 @@ public class StringBuilderExercises {
         //  Use deleteCharAt(i) to remove characters that are vowels.
         //  Hint: check if "aeiouAEIOU".indexOf(ch) >= 0
         //  Convert to String and return.
-        return null;
+        StringBuilder sb = new StringBuilder(text);
+
+        for (int i = sb.length() - 1; i >= 0 ; i--) {
+            if("aeiouAEIOU".indexOf(sb.charAt(i)) >= 0){
+                sb.deleteCharAt(i);
+            }
+        }
+        return sb.toString();
     }
 
     /**
@@ -62,7 +75,7 @@ public class StringBuilderExercises {
      */
     public static String reverseText(String text) {
         // TODO: 4 - Create a StringBuilder from text, call reverse(), convert to String.
-        return null;
+        return new StringBuilder(text).reverse().toString();
     }
 
     /**
@@ -78,7 +91,13 @@ public class StringBuilderExercises {
         //  Call toUpperCase() on that String (String method, not StringBuilder).
         //  Create a new StringBuilder from the uppercased String, append "!!!"
         //  Return the final String.
-        return null;
+
+        StringBuilder sb = new StringBuilder(text);
+        String str = sb.toString().toUpperCase();
+
+        StringBuilder sb2 = new StringBuilder(str).append("!!!!");
+
+        return sb2.toString();
     }
 
     /**
@@ -94,7 +113,16 @@ public class StringBuilderExercises {
         //  Append each value, and append a comma between values (but NOT after the last one).
         //  Hint: you can check if it's not the last element, or use deleteCharAt at the end.
         //  Return the result as a String.
-        return null;
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < values.length; i++) {
+            sb.append(i).append(",");
+
+            if(i == values.length - 1) sb.deleteCharAt(sb.length() - 1);
+        }
+
+        return sb.toString();
     }
 
     public static void main(String[] args) {

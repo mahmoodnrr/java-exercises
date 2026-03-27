@@ -11,27 +11,32 @@ public class Variables {
     public static void main(String[] args) {
 
         // TODO: 1 - Declare an int variable called age and assign it the value 25
-
+        int age = 25;
 
         // TODO: 2 - Declare a double variable called price and assign it the value 9.99
-
+        double price = 9.99;
 
         // TODO: 3 - Declare a boolean variable called isJavaFun and assign it the value true
-
+        boolean isJavaFun = false;
 
         // TODO: 4 - Declare a String variable called name and assign it your name
-
+        String name = "m";
 
         // TODO: 5 - Declare a char variable called grade and assign it the value 'A'
-
+        char grade = 'C';
 
         // TODO: 6 - Print all the variables above using System.out.println
         // Hint: You can print each variable on its own line, e.g.:
         //   System.out.println("Age: " + age);
-
+        System.out.println(age);
+        System.out.println(price);
+        System.out.println(isJavaFun);
+        System.out.println(grade);
+        System.out.println(name);
 
         // TODO: 7 - Declare a final (constant) variable called MAX_SCORE, set it to 100, and print it
         // Hint: Use the 'final' keyword before the type to make a constant
-
+        final int MAX_SCORE = 100;
+        System.out.println("MAX_SCORE = " + MAX_SCORE);
     }
 }

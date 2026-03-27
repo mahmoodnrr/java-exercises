@@ -21,7 +21,12 @@ public class LoopExercises {
         // TODO: 1 - Use nested for loops to print an n x n multiplication table.
         //  Outer loop iterates rows 1..n, inner loop iterates columns 1..n.
         //  Print each product followed by a tab, and a newline after each row.
-
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= n; j++) {
+                System.out.print(n * j + "\t");
+            }
+            System.out.println();
+        }
     }
 
     /**
@@ -33,6 +38,16 @@ public class LoopExercises {
      */
     public static int sumWithSkipAndStop(int n) {
         int sum = 0;
+        for (int i = 1; i <= n; i++) {
+
+            if(i % 3 == 0) continue;
+
+            System.out.print(i + "\t");
+            sum += i;
+
+            if(sum > 100) break;
+        }
+        System.out.println();
         // TODO: 2 - Loop from 1 to n. Use 'continue' to skip multiples of 3.
         //  Use 'break' to stop if sum exceeds 100. Add the current number to sum otherwise.
 
@@ -54,6 +69,16 @@ public class LoopExercises {
         //  When the target is found, set result to "Found at [row][col]" and
         //  use 'break search;' to exit both loops.
 
+        search:
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length ; j++) {
+                if(matrix[i][j] == target){
+                    result = "Found at [" + i +"]" + "["+ j+ "]";
+                    break search;
+                }
+            }
+        }
+
         return result;
     }
 
@@ -68,7 +93,9 @@ public class LoopExercises {
         long accumulator = 1;
         // TODO: 4 - Use a for loop from 1 to n (inclusive), multiplying accumulator
         //  by the loop variable each iteration. Return the result.
-
+        for (int i = 1; i <= n; i++) {
+            accumulator *= i;
+        }
         return accumulator;
     }
 
@@ -86,7 +113,15 @@ public class LoopExercises {
         // TODO: 5 - Use nested loops to print a centered pyramid of stars.
         //  For each row i (0-based), print (rows - i - 1) spaces followed by (2 * i + 1) stars.
         //  Print a newline after each row.
-
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < rows - i - 1; j++) {
+                System.out.print(" ");
+            }
+            for (int j = 0; j < 2 * i + 1; j++) {
+                System.out.print("*");
+            }
+            System.out.println();
+        }
     }
 
     /**
@@ -100,6 +135,10 @@ public class LoopExercises {
         StringBuilder sb = new StringBuilder();
         // TODO: 6 - Use a for loop starting from the last index down to 0.
         //  Append each element to sb. Add ", " between elements but not after the last one.
+        for (int i = arr.length - 1; i >= 0; i--) {
+            sb.append(arr[i]);
+            if(i != 0) sb.append(", ");
+        }
 
         return sb.toString();
     }
@@ -115,6 +154,17 @@ public class LoopExercises {
     public static int countUntilMatch(int target) {
         int attempts = 0;
         java.util.Random random = new java.util.Random();
+        boolean isFound = true;
+        var number = 0;
+
+        while(isFound){
+            attempts++;
+            number = random.nextInt(1, 101);
+            System.out.println("Attempt " + attempts + " is " + number);
+            if(number == target) {
+                isFound = false;
+            }
+        }
         // TODO: 7 - Use while(true) to create an infinite loop.
         //  Each iteration: increment attempts, generate a random int between 1 and 100,
         //  and break if it matches the target.
@@ -149,6 +199,6 @@ public class LoopExercises {
         System.out.println(iterateBackwards(new int[]{1, 2, 3, 4, 5}));
 
         System.out.println("\n=== Count Until Match ===");
-        System.out.println("Attempts to find 42: " + countUntilMatch(42));
+        System.out.println("Attempts to find 42: " + countUntilMatch(100));
     }
 }
