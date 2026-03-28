@@ -1,10 +1,11 @@
 package com.amigoscode._2_developers._10_exceptions;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 /**
  * Try-Catch Exercises
- *
+ * <p>
  * Practice exception handling: try-catch, finally, multi-catch, try-with-resources,
  * throwing exceptions, and exception propagation.
  */
@@ -23,7 +24,13 @@ public class TryCatch {
         //  try to return arr[index].
         //  catch ArrayIndexOutOfBoundsException, print "Index out of bounds: " + index,
         //  and return -1.
-        return 0;
+
+        try {
+            return arr[index];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Index out of bounds: " + index);
+            return -1;
+        }
     }
 
     /**
@@ -36,7 +43,14 @@ public class TryCatch {
     public static int safeParseInt(String text) {
         // TODO: 2 - Wrap Integer.parseInt(text) in a try-catch block.
         //  catch NumberFormatException, print "Cannot parse: " + text, and return 0.
-        return 0;
+
+        try {
+            int num = Integer.parseInt(text);
+            return num;
+        } catch (NumberFormatException e) {
+            System.out.println("Cannot parse: " + text);
+            return 0;
+        }
     }
 
     /**
@@ -54,7 +68,15 @@ public class TryCatch {
         //  finally: print "Division operation completed."
         //  Return the result. (You'll need a local variable since return in try
         //  executes after finally.)
-        return 0;
+
+        try {
+            return a / b;
+        } catch (ArithmeticException e) {
+            System.out.println("Cannot divide by zero");
+            return 0;
+        } finally {
+            System.out.println("Division operation completed");
+        }
     }
 
     /**
@@ -72,7 +94,15 @@ public class TryCatch {
         //  Catch both ArrayIndexOutOfBoundsException and NumberFormatException
         //  in a single catch block using: catch (ExType1 | ExType2 e)
         //  Print "Error: " + e.getMessage() and return -1.
-        return 0;
+
+        try {
+            String item = data[index];
+            return Integer.parseInt(item);
+        } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
+            System.out.println("Error " + e.getMessage());
+            return -1;
+        }
+
     }
 
     /**
@@ -89,7 +119,14 @@ public class TryCatch {
         //  }
         //  catch any exception and return -1.
         //  The Scanner will be automatically closed after the try block.
-        return 0;
+
+        try(Scanner scanner = new Scanner(input);) {
+            return scanner.nextInt();
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            return -1;
+        }
     }
 
     /**
@@ -103,6 +140,10 @@ public class TryCatch {
         // TODO: 6 - If age < 0, throw a new IllegalArgumentException
         //  with the message "Age cannot be negative: " + age.
         //  Otherwise, return age.
+
+        if(age < 0) {
+            throw new IllegalArgumentException("Age cannot be negative: " + age);
+        }
         return age;
     }
 
@@ -112,7 +153,7 @@ public class TryCatch {
      *
      * @param value a string that should contain a positive number
      * @return the validated positive number
-     * @throws NumberFormatException     if value is not a number
+     * @throws NumberFormatException    if value is not a number
      * @throws IllegalArgumentException if the number is negative
      */
     public static int processValue(String value) {
@@ -120,7 +161,8 @@ public class TryCatch {
         //  Then call validateAge() with the parsed int.
         //  Do NOT catch any exceptions here — let them propagate to the caller.
         //  This demonstrates that exceptions travel up the call stack.
-        return 0;
+
+        return Integer.parseInt(value);
     }
 
     public static void main(String[] args) {
