@@ -1,8 +1,5 @@
 package com.amigoscode._3_oop._6_solid;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Exercise: SOLID Principles
  *
@@ -48,6 +45,23 @@ public class SolidExercises {
     //   Then create a refactored UserManager that uses all three via
     //   constructor injection and has a createUser(name, email) method.
 
+    static class UserManager {
+        private final UserValidator userValidator;
+        private final UserRepository userRepository;
+        private final UserNotifier userNotifier;
+
+        public UserManager(UserValidator userValidator, UserRepository userRepository, UserNotifier userNotifier) {
+            this.userValidator = userValidator;
+            this.userRepository = userRepository;
+            this.userNotifier = userNotifier;
+        }
+
+        public void createUser(String name, String email) {
+            userValidator.validate(name, email);
+            userRepository.save(name, email);
+            userNotifier.sendWelcome(email);
+        }
+    }
 
     // =========================================================================
     // OCP - Open/Closed Principle
@@ -82,7 +96,7 @@ public class SolidExercises {
     // "Subtypes must be substitutable for their base types."
     //
     // PROBLEM: MutableSquare extends MutableRectangle but breaks the contract.
-    // Setting width on a square also changes height, which surprises code
+    // Setting side on a square also changes height, which surprises code
     // that expects normal rectangle behavior.
     // =========================================================================
 
@@ -104,11 +118,42 @@ public class SolidExercises {
     // TODO: 3 - Fix the LSP violation. Create IMMUTABLE versions:
     //   - Create a LspShape interface with: int area()
     //   - Create an ImmutableRectangle class implementing LspShape with
-    //     final fields width and height, constructor, and area() returning width * height
+    //     final fields side and height, constructor, and area() returning side * height
     //   - Create an ImmutableSquare class implementing LspShape with
     //     a final field side, constructor, and area() returning side * side
     //   Now neither class pretends to be the other. Both satisfy LspShape.
 
+    public interface LspShape {
+        int area();
+    }
+
+    public class ImmutableRectangle implements LspShape {
+        private final int width;
+        private final int height;
+
+        public ImmutableRectangle(int width, int height) {
+            this.width = width;
+            this.height = height;
+        }
+
+        @Override
+        public int area() {
+            return width * height;
+        }
+    }
+
+    public class ImmutableSquare implements LspShape {
+        private final int side;
+
+        public ImmutableSquare(int width, int height) {
+            this.side = width;
+        }
+
+        @Override
+        public int area() {
+            return side * side;
+        }
+    }
 
     // =========================================================================
     // ISP - Interface Segregation Principle
@@ -146,6 +191,43 @@ public class SolidExercises {
     //   Now RobotWorker is not forced to implement methods it cannot use.
 
 
+    public interface Workable {
+        void work();
+    }
+
+    public interface Eatable {
+        void eat();
+    }
+
+    public interface Sleepable {
+        void sleep();
+    }
+
+    static class HumanWorker implements Workable, Eatable, Sleepable {
+
+        @Override
+        public void eat() {
+            System.out.println("eating");
+        }
+
+        @Override
+        public void sleep() {
+            System.out.println("sleeping");
+        }
+
+        @Override
+        public void work() {
+            System.out.println("working");
+        }
+    }
+
+    static class Robotable implements Workable {
+        @Override
+        public void work() {
+            System.out.println("working");
+        }
+    }
+
     // =========================================================================
     // DIP - Dependency Inversion Principle
     // "Depend on abstractions, not on concretions."
@@ -168,6 +250,38 @@ public class SolidExercises {
         }
     }
 
+    public interface Database {
+        String query(String sql);
+    }
+
+    public static class MySQLDatabase implements Database {
+
+        @Override
+        public String query(String sql) {
+            return "MySQL result for: " + sql;
+        }
+    }
+
+    public static class PostgreSQLDatabase implements Database {
+
+        @Override
+        public String query(String sql) {
+            return "PostgreSQL result for: " + sql;
+        }
+    }
+
+    static class ReportGenerator {
+        private Database database;
+
+        public ReportGenerator(Database database) {
+            this.database = database;
+        }
+
+        String generateReport() {
+            return database.query("SELECT * FROM reports");
+        }
+    }
+
     // TODO: 5 - Fix the DIP violation:
     //   - Create a Database interface with: String query(String sql)
     //   - Create MySQLDatabase implementing Database
@@ -185,16 +299,33 @@ public class SolidExercises {
 
         // TODO: 6 - Test SRP: Create UserValidator, UserRepository, UserNotifier,
         //   and a refactored UserManager. Call createUser("Alice", "alice@test.com").
+        UserManager userManager = new UserManager(
+                new UserValidator(),
+                new UserRepository(),
+                new UserNotifier());
 
+        userManager.createUser("Ali", "t@t.com");
 
         // TODO: 7 - Test OCP: Create a DiscountCalculator and several Discount
         //   implementations. Calculate discounts for a $100 item and print results.
+        DiscountCalculator calculator = new DiscountCalculator();
+        System.out.println("calculator = " +
+                calculator.calculate(new ClearanceDiscount(), 100));
 
 
         // TODO: 8 - Test DIP: Create a ReportGenerator with MySQLDatabase,
         //   generate a report. Then create another with PostgreSQLDatabase
         //   and generate a report. Print both results to show the
         //   implementation was swapped without changing ReportGenerator.
+
+        ReportGenerator reportGenerator = new ReportGenerator(new MySQLDatabase());
+        System.out.println("reportGenerator = " +    reportGenerator.generateReport());
+
+        reportGenerator = new ReportGenerator(new PostgreSQLDatabase());
+        System.out.println("reportGenerator = " +    reportGenerator.generateReport());
+
+
+
 
     }
 }
