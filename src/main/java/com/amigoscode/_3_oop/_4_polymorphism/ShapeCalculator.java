@@ -9,17 +9,17 @@ import java.util.List;
 
 /**
  * Exercise: Polymorphism - Shape Calculator
- *
+ * <p>
  * Use polymorphism to write methods that work with any Shape.
  * Because Circle and Rectangle both extend Shape, a single method
  * can handle both — and any future Shape subclass — without modification.
- *
+ * <p>
  * Key concepts:
  * - Methods that accept a supertype parameter
  * - Polymorphic collections (List<Shape>)
  * - instanceof with pattern matching (Java 16+)
  * - Open/closed principle in practice
- *
+ * <p>
  * Prerequisites: Complete Shape.java, Circle.java, and Rectangle.java first.
  */
 public class ShapeCalculator {
@@ -29,15 +29,42 @@ public class ShapeCalculator {
     //   Use shape.getClass().getSimpleName() to get the class name.
     //   Use String.format("%.2f", shape.area()) for formatting.
 
+    public void printShapeArea(Shape shape) {
+        System.out.println("The " + shape.getClass().getSimpleName() + " has an area of "
+                + String.format("%.2f", shape.area()));
+    }
 
     // TODO: 2 - Create a method: double totalArea(List<Shape> shapes)
     //   Iterate over all shapes and return the sum of their areas.
 
+    public double totalArea(List<Shape> shapes) {
+        double total = 0;
+
+        for (Shape shape : shapes) {
+            total += shape.area();
+        }
+
+        return total;
+    }
 
     // TODO: 3 - Create a method: Shape largestShape(List<Shape> shapes)
     //   Return the shape with the largest area.
     //   If the list is empty, return null.
 
+    public Shape largestShape(List<Shape> shapes) {
+
+        if (shapes.isEmpty()) return null;
+
+        Shape largestShape = shapes.get(0);
+
+        for (Shape s : shapes) {
+            if (s.area() > largestShape.area()) {
+                largestShape = s;
+            }
+        }
+
+        return largestShape;
+    }
 
     // TODO: 4 - Create a method: String describeShape(Shape shape)
     //   Use instanceof with pattern matching (Java 16+) to return
@@ -47,19 +74,55 @@ public class ShapeCalculator {
     //   - If shape is a Rectangle r: return "Rectangle detected with area: " + r.area()
     //   - Otherwise: return "Unknown shape with area: " + shape.area()
 
+    public String describeShape(Shape shape) {
+
+        if(shape instanceof Circle c) {
+            return "Circle detected with area: " + c.area();
+        } else if (shape instanceof Rectangle r) {
+            return "Rectangle detected with area: " + r.area();
+        } else {
+            return "Unknown shape with area: " + shape.area();
+        }
+    }
 
     // TODO: 5 - Create a method: String formatSummary(List<Shape> shapes)
     //   Return a formatted summary string like:
     //   "Summary: <N> shapes, total area: <totalArea>, largest area: <largestArea>"
     //   Use the totalArea() and largestShape() methods you already wrote.
 
+    public String formatSummary(List<Shape> shapes) {
+        double total = totalArea(shapes);
+        Shape largest = largestShape(shapes);
+        double largestArea = largest != null ? largest.area() : 0;
+        return "Summary: " + shapes.size() + " shapes, total area: " + String.format("%.2f", total)
+                + ", largest area: " + String.format("%.2f", largestArea);
+    }
 
     // TODO: 6 - In main, create a List<Shape> with at least two Circles
     //   and two Rectangles. Call all the methods above and print results.
     //   This demonstrates polymorphism: the same method handles
     //   different shape types seamlessly.
 
+
     public static void main(String[] args) {
         // Complete TODO 6 here.
+
+        List<Shape> shapes = new ArrayList<>();
+        shapes.add(new Circle(5.0));
+        shapes.add(new Circle(3.0));
+        shapes.add(new Rectangle(4.0, 6.0));
+        shapes.add(new Rectangle(10.0, 2.0));
+
+        ShapeCalculator calc = new ShapeCalculator();
+
+        for (Shape shape : shapes) {
+            calc.printShapeArea(shape);
+            calc.describeShape(shape);
+        }
+
+
+        System.out.println("Total area: " + String.format("%.2f", calc.totalArea(shapes)));
+        System.out.println("Largest: " + calc.largestShape(shapes));
+        System.out.println(calc.formatSummary(shapes));
     }
 }

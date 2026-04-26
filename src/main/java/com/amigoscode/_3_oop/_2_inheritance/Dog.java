@@ -16,15 +16,19 @@ package com.amigoscode._3_oop._2_inheritance;
 
 // TODO: 1 - Make this class extend Animal.
 //   Change the class declaration so Dog inherits from Animal.
-public class Dog {
+public class Dog extends Animal {
 
     // TODO: 2 - Add a private field:
     //   - breed (String)
-
+    private String breed;
 
     // TODO: 3 - Create a constructor that takes name, age, and breed.
     //   Call super(name, age) to initialize the parent fields,
     //   then set the breed field.
+    public Dog(String name, int age, String breed) {
+        super(name, age);
+        this.breed = breed;
+    }
 
 
     // TODO: 4 - Override the makeSound() method to print:
@@ -32,27 +36,43 @@ public class Dog {
     //   Use the @Override annotation. You can access `name` because
     //   it is a protected field in Animal.
 
+    @Override
+    public void makeSound() {
+        System.out.println(super.name + " says : Woof! Woof!");
+    }
+
 
     // TODO: 5 - Add a fetch(String item) method specific to Dog.
     //   This method should print:
     //   "<name> fetches the <item>!"
     //   This method does not exist in Animal — it is unique to Dog.
 
+    public void fetch(String item) {
+        System.out.println(name + " fetched the " + item);
+    }
 
     // TODO: 6 - Override toString() to return:
     //   "Dog{name='XXX', age=XXX, breed='XXX'}"
 
+    @Override
+    public String toString() {
+        return "Dog{" +
+                "breed='" + breed + '\'' +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                '}';
+    }
 
     public static void main(String[] args) {
         // Uncomment and test after completing the TODOs:
-        // Dog dog = new Dog("Buddy", 3, "Golden Retriever");
-        // System.out.println(dog);
-        // dog.makeSound();
-        // dog.eat("kibble");       // inherited from Animal
-        // dog.fetch("tennis ball"); // specific to Dog
-        //
-        // // Polymorphism: a Dog IS-AN Animal
-        // Animal animal = new Dog("Rex", 5, "German Shepherd");
-        // animal.makeSound(); // calls Dog's overridden version
+         Dog dog = new Dog("Buddy", 3, "Golden Retriever");
+         System.out.println(dog);
+         dog.makeSound();
+         dog.eat("kibble");       // inherited from Animal
+         dog.fetch("tennis ball"); // specific to Dog
+
+         // Polymorphism: a Dog IS-AN Animal
+         Animal animal = new Dog("Rex", 5, "German Shepherd");
+         animal.makeSound(); // calls Dog's overridden version
     }
 }
