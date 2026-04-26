@@ -16,22 +16,29 @@ public class QueueExercises {
 
         // TODO: 1 - Create a Queue of Strings using LinkedList as the implementation
         //           Queue<String> queue = ...
-
+        Queue<String> queue = new LinkedList<>();
 
         // TODO: 2 - Add 5 elements to the queue using offer(): "Task1", "Task2", "Task3", "Task4", "Task5"
-
+        queue.offer("Task1");
+        queue.offer("Task2");
+        queue.offer("Task3");
+        queue.offer("Task4");
+        queue.offer("Task5");
 
         // TODO: 3 - Peek at the front element without removing it
         //           Print the result (should be "Task1")
+        System.out.println(queue.peek());
 
 
         // TODO: 4 - Poll (remove) an element from the front and print it
         //           Then print the queue to see the remaining elements
-
+        System.out.println(queue.poll());
+        System.out.println(queue);
 
         // TODO: 5 - Iterate through the queue using a for-each loop and print each element
         //           Note: this does NOT remove elements from the queue
-
+        System.out.println("Print each element");
+        queue.forEach(System.out::println);
 
         // --- PriorityQueue ---
         System.out.println("\n--- PriorityQueue ---");
@@ -40,6 +47,17 @@ public class QueueExercises {
         //           Poll all elements one by one and print them
         //           Observe how they come out in natural (ascending) order, not insertion order
 
+        PriorityQueue<Integer> integers = new PriorityQueue<>();
+        integers.add(50);
+        integers.add(20);
+        integers.add(40);
+        integers.add(10);
+        integers.add(30);
+
+        System.out.println("removing");
+        while (!integers.isEmpty()) {
+            System.out.println(integers.poll());
+        }
 
         // --- Print Queue Simulation ---
         System.out.println("\n--- Print Queue Simulation ---");
@@ -49,5 +67,14 @@ public class QueueExercises {
         //           Process (poll) each job one by one, printing "Printing: <job>" for each
         //           Continue until the queue is empty
 
+        Queue<String> jobs = new LinkedList<>();
+        jobs.offer("Report.pdf");
+        jobs.offer("Photo.jpg");
+        jobs.offer("Letter.docx");
+        jobs.offer("Slides.pptx");
+
+        while (!jobs.isEmpty()) {
+            System.out.println("Printing: " + jobs.poll());
+        }
     }
 }
