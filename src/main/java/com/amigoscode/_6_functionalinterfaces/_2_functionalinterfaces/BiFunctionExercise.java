@@ -25,23 +25,32 @@ public class BiFunctionExercise {
         // TODO: 1 - Create a BiFunction<String, String, String> called 'combiner'
         //  that concatenates two strings with a space in between.
         //  Example: ("John", "Doe") -> "John Doe"
+        
+        BiFunction<String, String, String> combiner = (a, b) -> a + " " + b;
+        System.out.println("combiner = " + combiner.apply("John", "Doe"));
 
 
         // TODO: 2 - Create a BiFunction<Integer, Integer, Integer> called 'max'
         //  that returns the larger of two integers.
         //  Hint: You can use Math.max or a ternary expression.
-
+        BiFunction<Integer, Integer, Integer> max = Math::max;
+        System.out.println("max.apply(100, 200) = " + max.apply(100, 200));
+    
 
         // TODO: 3 - Create a BiFunction<String, Integer, String> called 'repeat'
         //  that repeats a string N times.
         //  Example: ("Ha", 3) -> "HaHaHa"
         //  Hint: Use String.repeat(int) or a loop inside the lambda.
-
+        BiFunction<String, Integer, String> repeat = String::repeat;
+        System.out.println("repeat.apply(\"Ha\", 3) = " + repeat.apply("Ha", 3));
+    
 
         // TODO: 4 - Use andThen() to chain 'combiner' with a Function<String, Integer>
         //  that returns the length of the combined string.
         //  Apply it to ("Hello", "World") and print the result.
         //  Expected: 11 (length of "Hello World")
+        Function<String, Integer> func = String::length;
+        System.out.println("Length " + combiner.andThen(func).apply("Hello", "World"));
 
 
         List<String> firstNames = Arrays.asList("Alice", "Bob", "Charlie");
@@ -54,6 +63,15 @@ public class BiFunctionExercise {
         //  Hint: IntStream.range(0, firstNames.size())
         //          .mapToObj(i -> describe.apply(firstNames.get(i), ages.get(i)))
         //          .collect(Collectors.toList())
+
+        BiFunction<String, Integer, String> describe = (str, num) -> str + " is " + num + " years old";
+//        System.out.println("describe.apply(\"Hi\", 1) = " + describe.apply("Hema", 1));
+
+        List<String> result = IntStream.range(0, firstNames.size())
+                .mapToObj(i -> describe.apply(firstNames.get(i), ages.get(i)))
+                .collect(Collectors.toList());
+
+        System.out.println(result);
 
     }
 }

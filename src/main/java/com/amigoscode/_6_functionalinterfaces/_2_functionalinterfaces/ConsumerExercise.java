@@ -25,32 +25,40 @@ public class ConsumerExercise {
         // TODO: 1 - Create a Consumer<String> called 'greeter' that prints
         //  "Hello, <name>!" for a given name.
         //  Example: accept("Alice") prints "Hello, Alice!"
+        Consumer<String> greeter = System.out::println;
+        greeter.accept("Mahmoud");
 
 
         // TODO: 2 - Create a Consumer<String> called 'shouter' that prints
         //  the string in uppercase.
         //  Example: accept("hello") prints "HELLO"
-
+        Consumer<String> shouter = name -> System.out.println(name.toUpperCase());
+        shouter.accept("bye");
 
         // TODO: 3 - Chain 'greeter' and 'shouter' using andThen() to create
         //  a new Consumer called 'greetThenShout'. When you call
         //  greetThenShout.accept("Alice"), it should first print the greeting,
         //  then print "ALICE".
+        greeter.andThen(shouter).accept("Test");
 
 
         // TODO: 4 - Create a BiConsumer<String, Integer> called 'printNameAge'
         //  that prints "<name> is <age> years old."
         //  Call it with ("Bob", 25).
-
+        BiConsumer<String, Integer> printNameAge = (name, age)
+                -> System.out.println(name + " is " + age + " years old.");
+        printNameAge.accept("Dayday", 16);
 
         List<String> names = Arrays.asList("Alice", "Bob", "Charlie", "Diana");
 
         // TODO: 5 - Use 'greeter' with the forEach method on the names list
         //  to greet each person.
+        names.forEach(greeter);
 
 
         // TODO: 6 - Call the processAll method below, passing 'shouter'
         //  and the names list.
+        processAll(shouter, names);
 
 
         Map<String, Integer> scores = new HashMap<>();
@@ -60,6 +68,13 @@ public class ConsumerExercise {
         //  Use it to add: ("Alice", 95), ("Bob", 87), ("Charlie", 92).
         //  Print the scores map afterward.
 
+        BiConsumer<String, Integer> addToMap = (name, score) -> scores.put(name, score);
+
+        addToMap.accept("Alice", 95);
+        addToMap.accept("Bob", 87);
+        addToMap.accept("Charlie", 92);
+
+        System.out.println(scores);
     }
 
     /**
@@ -73,5 +88,7 @@ public class ConsumerExercise {
         for (T item : items) {
             consumer.accept(item);
         }
+
+//        items.forEach(consumer);
     }
 }

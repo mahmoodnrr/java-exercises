@@ -24,6 +24,11 @@ public class ExtendingInterfaces {
     //    @FunctionalInterface
     //    interface Transformer<T> extends Function<T, T> { }
 
+    @FunctionalInterface
+    interface Transformer<T> extends Function<T, T> {
+
+        @Override
+        T apply(T t);
 
     // TODO: 2 - Inside the Transformer interface, add a default method:
     //    default Transformer<T> andThenTransform(Transformer<T> after)
@@ -31,26 +36,40 @@ public class ExtendingInterfaces {
     //  then applies 'after' to the result.
     //  Hint: return input -> after.apply(this.apply(input));
 
+        default Transformer<T> andThenTransform(Transformer<T> after) {
+            return input ->  after.apply(this.apply(input));
+        }
+    }
 
     public static void main(String[] args) {
 
         // TODO: 3 - Create a Transformer<String> called 'trimmer' that trims
         //  whitespace from a string using String::trim or s -> s.trim().
 
+        Transformer<String> trimmer = String::trim;
+        System.out.println(trimmer.apply("hello"));
 
         // TODO: 4 - Create a Transformer<String> called 'lowerCaser' that
         //  converts a string to lowercase.
+        Transformer<String> lowerCaser = String::toLowerCase;
+        System.out.println(lowerCaser.apply("HELLO"));
 
 
         // TODO: 5 - Chain 'trimmer' and 'lowerCaser' using andThenTransform()
         //  to create a Transformer<String> called 'cleanUp'. Apply it to
         //  "  HELLO WORLD  " and print the result.
         //  Expected: "hello world"
+        Transformer<String> cleanUp =
+                trimmer.andThenTransform(lowerCaser);
 
+        System.out.println(cleanUp.apply("  HELLO WORLD  "));
 
         List<String> messyStrings = Arrays.asList(
                 "  Alice  ", "BOB", "  Charlie ", " DIANA  "
         );
+
+        List<String> cleanStrings = messyStrings.stream().map(cleanUp).collect(Collectors.toList());
+        System.out.println(cleanStrings);
 
         // TODO: 6 - Apply the 'cleanUp' transformer to each element of
         //  messyStrings and collect the results into a new List<String>.
