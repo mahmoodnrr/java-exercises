@@ -1,19 +1,22 @@
 package com.amigoscode._7_streams._6_transformations;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BinaryOperator;
 
 /**
  * Exercise: Advanced Reduce
- *
+ * <p>
  * Practice more complex reduce operations including building strings,
  * finding extremes, and using the three-argument reduce for parallel streams.
  */
 public class ReduceExercise {
 
-    record Order(String product, double price, int quantity) {}
+    record Order(String product, double price, int quantity) {
+    }
 
-    record Product(String name, double price) {}
+    record Product(String name, double price) {
+    }
 
     public static void main(String[] args) {
         List<Order> orders = List.of(
@@ -38,22 +41,34 @@ public class ReduceExercise {
         //           Total price for each order = price * quantity
         //           Map to total first, then reduce with Double::sum
         //           Print the result
-
+        Double reduce = orders.stream()
+                .map(o -> o.price * o.quantity)
+                .reduce(0.0, (Double::sum));
+        System.out.println("reduce = " + reduce);
 
         // TODO: 2 - Use reduce to build a comma-separated string from 'tags'
         //           Result should be: "java, streams, functional, programming, lambda"
         //           Use the single-argument reduce that returns Optional
-
+        Optional<String> reduce1 = tags.stream().reduce((a, b) -> a + ", " + b);
+        System.out.println("reduce1 = " + reduce1.orElse("Empty"));
 
         // TODO: 3 - Use reduce to find the most expensive product in 'products'
         //           Compare by price in the accumulator
         //           Print the product name and price
+        Optional<Product> reduce2 = products.stream()
+                .reduce((a, b) -> a.price() > b.price() ? a : b);
+        reduce2.ifPresent(System.out::println);
+
+        products.stream().reduce((a, b) -> a.price() >= b.price() ? a : b)
+                .ifPresent(p -> System.out.println(p.name() + " " + p.price()));
 
 
         // TODO: 4 - Create a BinaryOperator<Order> variable that picks the order
         //           with the higher total value (price * quantity)
         //           Use this operator in reduce() and print the winning order
-
+        BinaryOperator<Order> orderBinaryOperator =
+                (a, b) -> (a.price * a.quantity) > (b.price() * b.quantity) ? a : b;
+        orders.stream().reduce(orderBinaryOperator).ifPresent(System.out::println);
 
         // TODO: 5 - Implement a collector-like operation with reduce:
         //           Use the 3-argument reduce(identity, accumulator, combiner)
@@ -61,6 +76,8 @@ public class ReduceExercise {
         //           Identity: 0, Accumulator: (sum, order) -> sum + order.quantity()
         //           Combiner: Integer::sum
         //           Print the total quantity
+        int totalQuantity = orders.stream().reduce(0, (sum, order) -> sum + order.quantity(), Integer::sum);
+        System.out.println(totalQuantity);
 
 
         // TODO: 6 - Use reduce with a combiner for a parallel stream:
@@ -68,6 +85,8 @@ public class ReduceExercise {
         //           Use the 3-argument reduce with identity 0.0,
         //           accumulator that adds price*quantity, and Double::sum as combiner
         //           Print the result
-
+        double totalRevenue = orders.parallelStream()
+                .reduce(0.0, (sum, o) -> sum + o.price() * o.quantity(), Double::sum);
+        System.out.println(totalRevenue);
     }
 }

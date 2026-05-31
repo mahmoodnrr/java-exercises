@@ -18,12 +18,15 @@ public class IntStreamIterate {
         //           starting from 0 (0, 2, 4, 6, ..., 18)
         //           Use iterate(seed, unaryOperator) with limit(10)
         //           Print each number
-
+        IntStream.iterate(0, n -> n + 2).limit(10).forEach(System.out::println);
 
         // TODO: 2 - Use the 3-argument IntStream.iterate(seed, hasNext, next)
         //           to generate numbers from 1 to 100 that are multiples of 7
         //           The hasNext predicate should stop when the value exceeds 100
         //           Print each number
+        System.out.println();
+        IntStream.iterate(7, n -> n <= 100, n -> n + 7)
+                .forEach(System.out::println);
 
 
         // TODO: 3 - Use IntStream.iterate to generate a Fibonacci-like sequence
@@ -38,12 +41,16 @@ public class IntStreamIterate {
         // TODO: 4 - Use LongStream.range to generate numbers from 1 to 1_000_000
         //           Calculate and print the sum
         //           This demonstrates why LongStream exists (the sum exceeds int range)
-
+        System.out.println(LongStream.range(1, 1_000_000).sum());
 
         // TODO: 5 - Use DoubleStream to generate 5 random numbers between 0.0 and 1.0
         //           Use DoubleStream.generate(Math::random).limit(5)
         //           Print each number formatted to 4 decimal places
         //           Hint: Use forEach(d -> System.out.printf("%.4f%n", d))
+        System.out.println();
+        DoubleStream.generate(Math::random)
+                .limit(5)
+                .forEach(d -> System.out.printf("%.4f%n", d));
 
     }
 }
