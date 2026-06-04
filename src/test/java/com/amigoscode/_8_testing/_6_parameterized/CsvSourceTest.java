@@ -1,5 +1,6 @@
 package com.amigoscode._8_testing._6_parameterized;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -11,27 +12,42 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Exercise: CSV-Based Parameterized Tests
- *
+ * <p>
  * Practice using @CsvSource, @CsvFileSource, custom display names,
  * and custom ArgumentsProvider for data-driven tests.
  */
 @DisplayName("CSV Source Parameterized Tests")
 class CsvSourceTest {
 
+    private EmailValidator emailValidator;
+
+    @BeforeEach
+    void setUp() {
+        emailValidator = new EmailValidator();
+    }
+
     // TODO: 1 - Test math operations with @CsvSource.
     //  Use @ParameterizedTest and @CsvSource to test addition:
     //  @CsvSource({"1, 1, 2", "2, 3, 5", "10, -5, 5", "0, 0, 0", "-3, -7, -10"})
     //  The test method takes (int a, int b, int expectedSum) parameters.
     //  Assert that a + b equals expectedSum.
-
+    @ParameterizedTest
+    @CsvSource({"1, 1, 2", "2, 3, 5", "10, -5, 5", "0, 0, 0", "-3, -7, -10"})
+    void canTestMathOperation(int a, int b, int expectedSum) {
+        assertEquals(expectedSum, a + b);
+    }
 
     // TODO: 2 - Test string operations with @CsvSource.
     //  Use @CsvSource to test String.toUpperCase():
-    //  @CsvSource({"hello, HELLO", "world, WORLD", "java, JAVA", "'', ''"})
+    //  @CsvSource()
     //  The test method takes (String input, String expected) parameters.
     //  Assert that input.toUpperCase() equals expected.
-    //  Note: Use single quotes for empty strings in CSV.
-
+    //  Note: Use single quotes for empty strings i{"hello, HELLO", "world, WORLD", "java, JAVA", "'', ''"}n CSV.
+    @ParameterizedTest
+    @CsvSource({"hello, HELLO", "world, WORLD", "java, JAVA", "'', ''"})
+    void canTestStringUpperCaseMethod(String input, String expected) {
+        assertEquals(expected, input.toUpperCase());
+    }
 
     // TODO: 3 - Use @CsvFileSource to load test data from a CSV file.
     //  Create a file at src/test/resources/email-test-data.csv with content:
@@ -44,14 +60,22 @@ class CsvSourceTest {
     //      numLinesToSkip = 1) to skip the header row.
     //  The test method takes (String email, boolean expected) parameters.
     //  Use a new EmailValidator() to test isValid(email) equals expected.
-
+    @ParameterizedTest
+    @CsvFileSource(resources = "/email-test-data.csv", numLinesToSkip = 1)
+    void canTestCsvFileResource(String email, boolean expected) {
+       assertEquals(expected, emailValidator.isValid(email));
+    }
 
     // TODO: 4 - Use custom display names with @ParameterizedTest(name = ...).
     //  Annotate with @ParameterizedTest(name = "{0} * {1} = {2}")
     //  and @CsvSource({"2, 3, 6", "4, 5, 20", "0, 100, 0", "-2, 3, -6"}).
     //  The test method takes (int a, int b, int expectedProduct) parameters.
     //  Assert that a * b equals expectedProduct.
-
+    @ParameterizedTest(name = "{0} * {1} = {2}")
+    @CsvSource({"2, 3, 6", "4, 5, 20", "0, 100, 0", "-2, 3, -6"})
+    void canTestMultiplication(int a, int b, int expectedProduct) {
+        assertEquals(expectedProduct, a * b);
+    }
 
     // TODO: 5 - Use @ArgumentsSource with a custom ArgumentsProvider.
     //  Create a static inner class named CustomArgumentsProvider that
@@ -71,5 +95,23 @@ class CsvSourceTest {
     //          );
     //      }
     //  }
+
+    static class CustomArgumentsProvider implements ArgumentsProvider {
+
+        @Override
+        public Stream<? extends Arguments> provideArguments(ExtensionContext context) throws Exception {
+            return Stream.of(
+                    Arguments.of("hello", 5),
+                    Arguments.of("", 0),
+                    Arguments.of("Java", 4)
+            );
+        }
+
+        @ParameterizedTest
+        @ArgumentsSource(CustomArgumentsProvider.class)
+        void canTestArgument(String input, int expectedLength){
+            assertEquals(expectedLength, input.length());
+        }
+    }
 
 }
