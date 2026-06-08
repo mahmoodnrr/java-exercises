@@ -15,7 +15,7 @@ import static org.mockito.Mockito.*;
 
 /**
  * Exercise: Verifying Mock Interactions
- *
+ * <p>
  * Practice advanced verification techniques: verifying call counts,
  * checking no unexpected interactions, and verifying call order.
  */
@@ -40,6 +40,12 @@ class VerifyInteractionsTest {
     //  Then verify: verifyNoInteractions(paymentService);
     //  And: verifyNoInteractions(orderRepository);
 
+    @Test
+    void canVerifyNoInteractions() {
+        verifyNoInteractions(paymentService);
+        verifyNoInteractions(orderRepository);
+    }
+
 
     // TODO: 2 - Use verifyNoMoreInteractions() after verifying known calls.
     //  Stub paymentService.charge to return true.
@@ -48,28 +54,73 @@ class VerifyInteractionsTest {
     //  Verify orderRepository.save was called.
     //  Then call verifyNoMoreInteractions(paymentService, orderRepository)
     //  to ensure no other methods were called.
+    @Test
+    void canVerifyNoMoreInteractions() {
 
+        when(paymentService.charge(anyString(), anyDouble())).thenReturn(true);
+
+        Order order = new Order("Id-123", "Cust-123", 90.00);
+        orderService.placeOrder(order);
+
+        verify(paymentService).charge(anyString(), anyDouble());
+        verify(orderRepository).save(order);
+        verifyNoMoreInteractions(paymentService, orderRepository);
+    }
 
     // TODO: 3 - Use times(n) to verify method was called exactly n times.
     //  Stub paymentService.charge to return true.
     //  Place 3 different orders.
     //  Verify: verify(paymentService, times(3)).charge(anyString(), anyDouble());
     //  Verify: verify(orderRepository, times(3)).save(any(Order.class));
+    @Test
+    void canVerifyTimesOfInteraction() {
 
+        when(paymentService.charge(anyString(), anyDouble())).thenReturn(true);
+
+        Order order = new Order("Id-123", "Cust-123", 90.00);
+        orderService.placeOrder(order);
+        orderService.placeOrder(order);
+        orderService.placeOrder(order);
+
+        verify(paymentService, times(3)).charge(anyString(), anyDouble());
+        verify(orderRepository, times(3)).save(order);
+        verifyNoMoreInteractions(paymentService, orderRepository);
+    }
 
     // TODO: 4 - Use never() to verify a method was NOT called.
     //  Stub paymentService.charge to return false (payment fails).
     //  Try to place an order (it should throw RuntimeException).
     //  Verify: verify(orderRepository, never()).save(any(Order.class));
     //  The order should NOT be saved when payment fails.
+    @Test
+    void canVerifyNeverInteraction() {
 
+        when(paymentService.charge(anyString(), anyDouble())).thenReturn(false);
+
+        Order order = new Order("Id-123", "Cust-123", 90.00);
+        assertThrows(RuntimeException.class, () -> orderService.placeOrder(order));
+        verify(orderRepository, never()).save(any(Order.class));
+    }
 
     // TODO: 5 - Use atLeast() and atMost() for flexible verification.
     //  Stub paymentService.charge to return true.
     //  Place 3 orders.
     //  Verify: verify(paymentService, atLeast(2)).charge(anyString(), anyDouble());
     //  Verify: verify(paymentService, atMost(5)).charge(anyString(), anyDouble());
+    @Test
+    void canVerifyAtMost_And_AtLeastInteractions() {
 
+        when(paymentService.charge(anyString(), anyDouble())).thenReturn(true);
+
+        Order order = new Order("Id-123", "Cust-123", 90.00);
+        orderService.placeOrder(order);
+        orderService.placeOrder(order);
+        orderService.placeOrder(order);
+
+        verify(paymentService, atLeast(2)).charge(anyString(), anyDouble());
+        verify(paymentService, atMost(3)).charge(anyString(), anyDouble());
+        verify(orderRepository, atMost(3)).save(any(Order.class));
+    }
 
     // TODO: 6 - Verify order of calls using InOrder.
     //  Stub paymentService.charge to return true.
@@ -78,7 +129,18 @@ class VerifyInteractionsTest {
     //  Verify charge was called BEFORE save:
     //  inOrder.verify(paymentService).charge(anyString(), anyDouble());
     //  inOrder.verify(orderRepository).save(any(Order.class));
+    @Test
+    void canVerifyInteractionsInOrder() {
 
+        when(paymentService.charge(anyString(), anyDouble())).thenReturn(true);
+
+        Order order = new Order("Id-123", "Cust-123", 90.00);
+        orderService.placeOrder(order);
+
+        InOrder inOrder = inOrder(paymentService, orderRepository);
+        inOrder.verify(paymentService).charge(anyString(), anyDouble());
+        inOrder.verify(orderRepository).save(any(Order.class));
+    }
 
     // TODO: 7 - Test that an exception is thrown when payment fails.
     //  Stub paymentService.charge to return false.
@@ -86,5 +148,15 @@ class VerifyInteractionsTest {
     //  Use assertThrows(RuntimeException.class, () -> orderService.placeOrder(order));
     //  Verify the exception message contains "Payment failed".
     //  Verify that orderRepository.save was never called.
+    @Test
+    void canThrowException() {
 
+        when(paymentService.charge(anyString(), anyDouble())).thenReturn(false);
+
+        Order order = new Order("Id-123", "Cust-123", 90.00);
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> orderService.placeOrder(order));
+
+        assertTrue(exception.getMessage().contains("Payment failed"));
+        verify(orderRepository, never()).save(any(Order.class));
+    }
 }

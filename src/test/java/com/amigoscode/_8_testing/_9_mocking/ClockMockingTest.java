@@ -1,5 +1,6 @@
 package com.amigoscode._8_testing._9_mocking;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -29,34 +30,70 @@ class ClockMockingTest {
     @Mock
     private Clock clock;
 
+    private TimedGreeter timedGreeter;
     // TODO: 1 - Create a TimedGreeter with the mocked Clock.
     //  In each test below, you will need to create:
     //  TimedGreeter greeter = new TimedGreeter(clock);
     //  Or you can declare it as a field and set it up in a @BeforeEach method.
-
+    @BeforeEach
+    void setUp() {
+        timedGreeter = new TimedGreeter(clock);
+    }
 
     // TODO: 2 - Stub clock.now() to return a morning time and test greet().
     //  when(clock.now()).thenReturn(LocalDateTime.of(2024, 1, 1, 8, 0));
     //  TimedGreeter greeter = new TimedGreeter(clock);
     //  assertEquals("Good morning", greeter.greet());
 
+    @Test
+    void canGetGoodMorning() {
+       when(clock.now()).thenReturn((LocalDateTime.of(2024, 1, 1, 8, 0)));
+       assertEquals("Good morning", timedGreeter.greet());
+    }
 
     // TODO: 3 - Test greet() returns "Good morning" for boundary times.
     //  Test with hour = 5 (start of morning): should return "Good morning".
     //  Test with hour = 11 (end of morning): should return "Good morning".
+    @Test
+    void canGetGoodMorningDifferentTimes() {
+        when(clock.now()).thenReturn((LocalDateTime.of(2024, 1, 1, 5, 0)));
+        assertEquals("Good morning", timedGreeter.greet());
 
+        when(clock.now()).thenReturn((LocalDateTime.of(2024, 1, 1, 11, 0)));
+        assertEquals("Good morning", timedGreeter.greet());
+    }
 
     // TODO: 4 - Stub clock.now() to return an afternoon time and test.
     //  when(clock.now()).thenReturn(LocalDateTime.of(2024, 1, 1, 14, 0));
     //  Assert greeter.greet() returns "Good afternoon".
     //  Also test boundary: hour = 12 and hour = 16.
+    @Test
+    void canGetGoodAfternoon() {
+        when(clock.now()).thenReturn((LocalDateTime.of(2024, 1, 1, 14, 0)));
+        assertEquals("Good afternoon", timedGreeter.greet());
 
+        when(clock.now()).thenReturn((LocalDateTime.of(2024, 1, 1, 12, 0)));
+        assertEquals("Good afternoon", timedGreeter.greet());
+
+        when(clock.now()).thenReturn((LocalDateTime.of(2024, 1, 1, 16, 0)));
+        assertEquals("Good afternoon", timedGreeter.greet());
+    }
 
     // TODO: 5 - Stub clock.now() to return an evening time and test.
     //  when(clock.now()).thenReturn(LocalDateTime.of(2024, 1, 1, 20, 0));
     //  Assert greeter.greet() returns "Good evening".
     //  Also test boundaries: hour = 17 (start of evening) and hour = 4 (late night).
+    @Test
+    void canGetGoodEvening() {
+        when(clock.now()).thenReturn((LocalDateTime.of(2024, 1, 1, 20, 0)));
+        assertEquals("Good evening", timedGreeter.greet());
 
+        when(clock.now()).thenReturn((LocalDateTime.of(2024, 1, 1, 17, 0)));
+        assertEquals("Good evening", timedGreeter.greet());
+
+        when(clock.now()).thenReturn((LocalDateTime.of(2024, 1, 1, 4, 0)));
+        assertEquals("Good evening", timedGreeter.greet());
+    }
 
     // TODO: 6 - Verify that clock.now() was called during greet().
     //  Stub clock.now() to return any time.
@@ -64,5 +101,13 @@ class ClockMockingTest {
     //  verify(clock).now();
     //  verify(clock, times(1)).now();
     //  This confirms the greeter is actually using the clock.
+    @Test
+    void canVerifyClockNowMethodCalled() {
+        when(clock.now()).thenReturn((LocalDateTime.of(2024, 1, 1, 20, 0)));
+        assertEquals("Good evening", timedGreeter.greet());
 
+        verify(clock).now();
+        verify(clock, times(1)).now();
+        verifyNoMoreInteractions(clock);
+    }
 }
